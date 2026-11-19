@@ -82,13 +82,15 @@ Greasy Fork 站规不管，**不代表目标网站不管**。风险在两处：
 https://raw.githubusercontent.com/zhuzhihaocool-bit/esnai-course-helper/main/esnai-course-helper.user.js
 ```
 
-> **建议用"直接输入代码"而不是 URL 导入**，原因：
+> **推荐用 URL 导入**，但要知道两件事：
 >
-> Greasy Fork 官方文档（[meta-keys](https://greasyfork.org/zh-CN/help/meta-keys)）明确说明：
-> 「Greasy Fork 将自动修改 `@updateURL` / `@installURL` / `@downloadURL` 属性使其永远通过 Greasy Fork 进行更新。」
+> 1. Greasy Fork 官方文档（[meta-keys](https://greasyfork.org/zh-CN/help/meta-keys)）说明：
+>    「Greasy Fork 将自动修改 `@updateURL` / `@installURL` / `@downloadURL`，使其永远通过 Greasy Fork 更新。」
+>    所以安装后的脚本从 Greasy Fork 更新，不走 GitHub。这更好——不受 raw 限流影响。
+> 2. URL 导入只是把内容抓一次，**之后不会自动同步**。要自动同步需要在脚本管理页配置
+>    `Sync type: Automatic`（见文末"提交后"一节）。
 >
-> 也就是说，无论你用哪种方式提交，安装后的脚本都会从 Greasy Fork 更新，而不是 GitHub。
-> 这反而更好——Greasy Fork 的更新通道不受 GitHub raw 限流影响。
+> 若追求简单，选"直接输入代码"粘贴全文也可以，效果与 URL 导入相同。
 
 ### 脚本名称
 
