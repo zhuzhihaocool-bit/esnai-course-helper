@@ -91,3 +91,14 @@ CI 会直接失败并指出是哪个操作。详见 README「设计约束」。
 ### 新增
 
 - `docs/greasyfork-publish.md`：Greasy Fork 发布所需的完整文案与表单填写说明
+
+## [2.0.2] - 2026-11-19
+
+### 变更
+
+- 放弃 Greasy Fork 发布计划（个人选择），改为公众号 / 微信分享
+- 新增 `docs/wechat/`：
+  - `article-copy.html` — 一键复制排版好的文章（保留标题、加粗、列表、代码块格式，可直接粘进公众号编辑器）
+  - `article.md` — 文章源文，便于修改
+  - `publish-guide.md` — 公众号发布操作步骤（含表格转图片、阅读原文设置、避坑提醒）
+- 移除 `docs/greasyfork-publish.md`
