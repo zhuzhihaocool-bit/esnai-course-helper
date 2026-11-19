@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         上海国家会计学院继续教育 · 课程助手
 // @namespace    https://github.com/zhuzhihaocool-bit/esnai-course-helper
-// @version      1.7.0
+// @version      1.8.1
 // @description  读取课程进度、学时达标后在新标签打开下一门，并关闭旧播放标签。不改播放位置、不改静音、不监听网络、不创建 iframe。
 // @author       zhuzhihaocool-bit
 // @match        https://ce.esnai.net/*
@@ -44,7 +44,7 @@
     var K_ARRIVE = 'sh-arrive';
     var K_RATE = 'sh-rate';
 
-    var VER = '1.7.0';
+    var VER = '1.8.1';
     var RATES = [1, 1.25, 1.5, 2, 3, 4];
 
     function ls(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } }
@@ -71,13 +71,19 @@
                 'font:12.5px/1.6 -apple-system,"Microsoft YaHei",sans-serif;color:#fff;background:#0969da;' +
                 'box-shadow:0 2px 8px rgba(0,0,0,.2);text-align:center';
             document.body.appendChild(b);
+            document.body.style.paddingTop = '38px';   // 让出横幅高度，避免遮住站点抬头
         }
         b.innerHTML = html +
             '<span id="sh-x" style="position:absolute;right:10px;top:6px;cursor:pointer;opacity:.85">✕</span>';
         b.style.display = '';
         var x = document.getElementById('sh-x');
-        if (x) x.onclick = function () { b.style.display = 'none'; };
-        if (ms) setTimeout(function () { if (b) b.style.display = 'none'; }, ms);
+        if (x) x.onclick = function () {
+            b.style.display = 'none';
+            document.body.style.paddingTop = '';
+        };
+        if (ms) setTimeout(function () {
+            if (b) { b.style.display = 'none'; document.body.style.paddingTop = ''; }
+        }, ms);
     }
 
     function bind(id, fn) { var e = document.getElementById(id); if (e) e.onclick = fn; }
@@ -148,9 +154,18 @@
             var t = tx(cells[i].textContent);
             if (!t || t.indexOf('%') >= 0) continue;
             if (/^[\d.\s学时]+$/.test(t)) continue;
+            if (/^(资产评估|会计|审计|金融|税务|经济|管理)$/.test(t)) continue;   // 类别列
             if (t.length > n) { n = t.length; best = t; }
         }
-        return best.slice(0, 50);
+        // 剥离末尾「讲师名 + 序号」：如「…重点难点问题讲解 赵强 6」
+        best = best.replace(/\s+(?:[\u4e00-\u9fa5]{2,3})\s+\d{1,3}$/, '');
+        best = best.replace(/\s+\d{1,3}$/, '');
+        // 剥离末尾孤立的人名（2-3 个汉字且前面是空格）
+        best = best.replace(/\s+[\u4e00-\u9fa5]{2,3}$/, function (m) {
+            // 只在长度明显偏短时剥离，避免误删正常词尾
+            return m.length >= 3 ? '' : m;
+        });
+        return best.trim().slice(0, 50);
     }
 
     function scan() {
@@ -158,12 +173,22 @@
         for (var r = 0; r < rows.length; r++) {
             var tr = rows[r];
             var whole = tx(tr.textContent);
-            if (!whole || !/(\d{1,3})\s*%/.test(whole)) continue;
+            if (!whole || !/(?:^|[^\d])(\d{1,3})\s*%/.test(whole)) continue;
             var cells = Array.prototype.slice.call(tr.children);
             if (cells.length < 2) continue;
 
-            var pctM = whole.match(/(\d{1,3})\s*%/);
-            var pct = pctM ? parseInt(pctM[1], 10) : null;
+            // 从独立的单元格取百分比：tr.textContent 会把相邻单元格直接粘在一起
+            // （"赵强 6" + "68%" → "668%"），按整行匹配会读错
+            var pct = null;
+            for (var ci = 0; ci < cells.length; ci++) {
+                var ct = tx(cells[ci].textContent);
+                var cm = ct.match(/^(\d{1,3})\s*%$/);
+                if (cm) { pct = parseInt(cm[1], 10); break; }
+            }
+            if (pct === null) {
+                var pm = whole.match(/(?:^|[^\d])(\d{1,3})\s*%/);
+                if (pm) pct = parseInt(pm[1], 10);
+            }
             var ids = idsOf(tr.outerHTML || '');
             var name = pickName(cells);
             var key = ids.cw || ('n:' + name);
@@ -300,11 +325,23 @@
                 return;
             }
 
-            banner((on ? '自动跳课<b>已开启</b>' : '自动跳课<b>已关闭</b>') +
-                   '　待学 ' + p.length + ' 门　下一门：' + next.name.slice(0, 22) + '（' + (next.pct === null ? '?' : next.pct) + '%）　' +
-                   '<span id="sh-go" style="text-decoration:underline;cursor:pointer">' + (on ? '关闭自动' : '开启自动') + '</span>　' +
-                   '<span id="sh-enter" style="text-decoration:underline;cursor:pointer">现在就进这门</span>' +
-                   '<div style="opacity:.85;font-size:11.5px;margin-top:1px">' + extra + '</div>');
+            var badge = on
+                ? '<b style="background:#1a7f37;padding:1px 7px;border-radius:4px;font-size:11px">已开启</b>'
+                : '<b style="background:#cf222e;padding:1px 7px;border-radius:4px;font-size:11px">已关闭</b>';
+            banner(
+                '<div style="display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap">' +
+                  '<span>自动跳课 ' + badge + '</span>' +
+                  '<span style="opacity:.45">|</span>' +
+                  '<span>待学 <b>' + p.length + '</b> 门</span>' +
+                  '<span style="opacity:.45">|</span>' +
+                  '<span>下一门 <b>' + next.name.slice(0, 18) + '</b>' +
+                    '<span style="opacity:.75">（' + (next.pct === null ? '?' : next.pct) + '%）</span></span>' +
+                  '<span id="sh-enter" style="background:#fff;color:#0969da;padding:2px 10px;border-radius:5px;' +
+                    'cursor:pointer;font-weight:600;font-size:12px">现在就进这门 →</span>' +
+                '</div>' +
+                '<div style="opacity:.85;font-size:11px;margin-top:4px">' + extra + '　' +
+                  '<span id="sh-go" style="text-decoration:underline;cursor:pointer">' + (on ? '关闭自动' : '开启自动') + '</span>' +
+                '</div>');
 
             bind('sh-go', function () { set(K_ON, on ? '0' : '1'); location.reload(); });
             bind('sh-enter', function () { openNew(next.href, next.name); });
