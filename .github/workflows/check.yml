@@ -1,0 +1,94 @@
+name: 语法检查
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  syntax:
+    name: 校验用户脚本
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 检查主脚本语法
+        run: |
+          node --check esnai-course-helper.user.js
+          echo "✓ 主脚本语法通过"
+
+      - name: 检查构建脚本语法
+        run: |
+          node --check scripts/build.js
+          echo "✓ 构建脚本语法通过"
+
+      - name: 生成开发版并校验
+        run: |
+          node scripts/build.js
+          node --check dev/esnai-course-helper.dev.user.js
+          echo "✓ 开发版生成并校验通过"
+
+      - name: 校验脚本元信息
+        run: |
+          set -e
+          FILE=esnai-course-helper.user.js
+
+          # 必需的元信息字段
+          for key in "@name" "@namespace" "@version" "@description" "@match" "@license"; do
+            if ! grep -q "^// $key" "$FILE"; then
+              echo "✗ 缺少元信息字段：$key"
+              exit 1
+            fi
+          done
+          echo "✓ 元信息字段齐全"
+
+          # @version 与 var VER 必须一致
+          META_VER=$(grep -m1 '^// @version' "$FILE" | awk '{print $3}')
+          CODE_VER=$(grep -m1 "var VER = '" "$FILE" | sed "s/.*var VER = '\([^']*\)'.*/\1/")
+          echo "  @version = $META_VER"
+          echo "  var VER  = $CODE_VER"
+          if [ "$META_VER" != "$CODE_VER" ]; then
+            echo "✗ 版本号不一致，请同步 @version 与 var VER"
+            exit 1
+          fi
+          echo "✓ 版本号一致"
+
+      - name: 检查禁用 API 是否被误加回来
+        run: |
+          set -e
+          FILE=esnai-course-helper.user.js
+          FAIL=0
+
+          # 去掉注释行后再检查（注释里允许提到这些词）
+          STRIPPED=$(grep -v '^\s*//' "$FILE" | grep -v '^\s*\*' | grep -v '^\s*/\*')
+
+          check() {
+            local pat="$1" desc="$2"
+            if echo "$STRIPPED" | grep -qE "$pat"; then
+              echo "✗ 发现禁用操作：$desc"
+              FAIL=1
+            fi
+          }
+
+          check '\.currentTime\s*=' "写 video.currentTime（会导致画面全黑）"
+          check '\.muted\s*=' "写 video.muted（会导致播放器停解码）"
+          check '\.volume\s*=' "写 video.volume（同上）"
+          check 'XMLHttpRequest\.prototype' "hook XHR（会拖死视频分片加载）"
+          check 'window\.fetch\s*=' "hook fetch（同上）"
+          check 'createElement\(.iframe.\)' "创建 iframe（会递归加载导致浏览器卡死）"
+
+          if [ "$FAIL" -eq 1 ]; then
+            echo ""
+            echo "这些操作已列入 README「设计约束」，请勿移除限制。"
+            exit 1
+          fi
+          echo "✓ 未发现禁用操作"

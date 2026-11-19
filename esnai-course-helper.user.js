@@ -1,13 +1,15 @@
 // ==UserScript==
 // @name         上海国家会计学院继续教育 · 课程助手
 // @namespace    https://github.com/zhuzhihaocool-bit/esnai-course-helper
-// @version      1.8.1
+// @version      1.9.0
 // @description  读取课程进度、学时达标后在新标签打开下一门，并关闭旧播放标签。不改播放位置、不改静音、不监听网络、不创建 iframe。
 // @author       zhuzhihaocool-bit
 // @match        https://ce.esnai.net/*
 // @homepageURL  https://github.com/zhuzhihaocool-bit/esnai-course-helper
 // @supportURL   https://github.com/zhuzhihaocool-bit/esnai-course-helper/issues
 // @license      MIT
+// @downloadURL  https://raw.githubusercontent.com/zhuzhihaocool-bit/esnai-course-helper/main/esnai-course-helper.user.js
+// @updateURL    https://raw.githubusercontent.com/zhuzhihaocool-bit/esnai-course-helper/main/esnai-course-helper.user.js
 // @run-at       document-idle
 // @grant        none
 // ==/UserScript==
@@ -44,7 +46,7 @@
     var K_ARRIVE = 'sh-arrive';
     var K_RATE = 'sh-rate';
 
-    var VER = '1.8.1';
+    var VER = '1.9.0';
     var RATES = [1, 1.25, 1.5, 2, 3, 4];
 
     function ls(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } }

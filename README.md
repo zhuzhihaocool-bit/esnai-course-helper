@@ -68,6 +68,10 @@
    - 新建脚本，粘贴全文保存
 3. 打开 `https://ce.esnai.net/cpvtianjin/study.do`，顶部出现蓝色横幅即成功
 
+> **自动更新已开启**：脚本头部带 `@downloadURL` / `@updateURL`，
+> Tampermonkey 会定期检查 GitHub 上的新版本并提示更新，无需手动粘贴代码。
+> 前提是仓库为公开状态。
+
 ### 使用流程
 
 ```
