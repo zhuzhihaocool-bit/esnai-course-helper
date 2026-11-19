@@ -146,16 +146,21 @@ esnai-course-helper/
 ├── esnai-course-helper.user.js   # 主脚本（单文件，无依赖）
 ├── README.md                     # 本文件
 ├── LICENSE                       # MIT
-├── CHANGELOG.md                  # 版本记录
-├── docs/
-│   ├── how-timing-works.md       # 学时计算机制（含实测抓包）
-│   ├── troubleshooting.md        # 常见问题排查
-│   ├── wechat/                   # 公众号分享材料
-│   │   ├── article-copy.html     # 一键复制排版好的正文
-│   │   ├── article.md            # 文章源文（Markdown）
-│   │   └── publish-guide.md      # 发布操作步骤
-│   └── publishing-checklist.md   # 发布前核对清单
-└── .gitignore
+├── CHANGELOG.md                  # 脚本版本记录（只记代码变更）
+├── .gitignore
+├── .github/
+│   ├── workflows/check.yml       # CI：语法检查 + 设计约束守卫
+│   └── ISSUE_TEMPLATE/
+├── scripts/build.js              # 生成开发版
+├── dev/                          # 开发版输出（不入库）
+└── docs/
+    ├── how-timing-works.md       # 学时计算机制（含实测抓包）
+    ├── troubleshooting.md        # 常见问题排查
+    ├── publishing-checklist.md   # 发布前核对清单
+    └── wechat/                   # 公众号分享材料
+        ├── article-copy.html     # 一键复制排版好的正文
+        ├── article.md            # 文章源文
+        └── publish-guide.md      # 发布操作步骤
 ```
 
 ---
