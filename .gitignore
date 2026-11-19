@@ -1,0 +1,26 @@
+# 依赖与构建产物
+node_modules/
+dist/
+
+# 开发版由 scripts/build.js 生成，不入库（避免与主脚本不同步）
+dev/*.dev.user.js
+!dev/.gitkeep
+
+# 编辑器
+.vscode/
+.idea/
+*.swp
+
+# 系统
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 日志与临时文件
+*.log
+*.tmp
+*.bak
+
+# 本地测试产物
+test-output/
+screenshots/
