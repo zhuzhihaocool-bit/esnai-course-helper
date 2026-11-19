@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         上海国家会计学院继续教育 · 课程助手
-// @namespace    https://github.com/your-name/esnai-course-helper
+// @namespace    https://github.com/zhuzhihaocool-bit/esnai-course-helper
 // @version      1.7.0
 // @description  读取课程进度、学时达标后在新标签打开下一门，并关闭旧播放标签。不改播放位置、不改静音、不监听网络、不创建 iframe。
-// @author       your-name
+// @author       zhuzhihaocool-bit
 // @match        https://ce.esnai.net/*
-// @homepageURL  https://github.com/your-name/esnai-course-helper
-// @supportURL   https://github.com/your-name/esnai-course-helper/issues
+// @homepageURL  https://github.com/zhuzhihaocool-bit/esnai-course-helper
+// @supportURL   https://github.com/zhuzhihaocool-bit/esnai-course-helper/issues
 // @license      MIT
 // @run-at       document-idle
 // @grant        none

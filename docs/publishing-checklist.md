@@ -22,7 +22,7 @@
 
 | 文件 | 占位符 | 改成 |
 |---|---|---|
-| `esnai-course-helper.user.js` | `<your-name>`（在 `@namespace` / `@author` / `@homepageURL` / `@supportURL`） | 你的 GitHub 用户名 |
+| `esnai-course-helper.user.js` | `<zhuzhihaocool-bit>`（在 `@namespace` / `@author` / `@homepageURL` / `@supportURL`） | 你的 GitHub 用户名 |
 | `README.md` | 无 | — |
 | `CHANGELOG.md` | 无 | — |
 | `LICENSE` | `esnai-course-helper contributors` | 可保留，或改成你的名字 |
@@ -30,8 +30,8 @@
 替换命令（在仓库根目录）：
 
 ```bash
-# 把 your-name 换成你的 GitHub 用户名
-sed -i 's/your-name/YOUR_GITHUB_NAME/g' esnai-course-helper.user.js
+# 把 zhuzhihaocool-bit 换成你的 GitHub 用户名
+sed -i 's/zhuzhihaocool-bit/YOUR_GITHUB_NAME/g' esnai-course-helper.user.js
 ```
 
 ## 建议补充（非必需，但能让项目更完整）
@@ -60,7 +60,7 @@ jobs:
 
 ```bash
 # 1. 替换占位符
-sed -i 's/your-name/YOUR_GITHUB_NAME/g' esnai-course-helper.user.js
+sed -i 's/zhuzhihaocool-bit/YOUR_GITHUB_NAME/g' esnai-course-helper.user.js
 
 # 2. 重新生成开发版（可选）
 node scripts/build.js
