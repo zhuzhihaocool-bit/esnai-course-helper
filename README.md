@@ -156,11 +156,7 @@ esnai-course-helper/
 └── docs/
     ├── how-timing-works.md       # 学时计算机制（含实测抓包）
     ├── troubleshooting.md        # 常见问题排查
-    ├── publishing-checklist.md   # 发布前核对清单
-    └── wechat/                   # 公众号分享材料
-        ├── article-copy.html     # 一键复制排版好的正文
-        ├── article.md            # 文章源文
-        └── publish-guide.md      # 发布操作步骤
+    └── publishing-checklist.md   # 发布前核对清单
 ```
 
 ---

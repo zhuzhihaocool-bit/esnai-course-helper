@@ -37,10 +37,9 @@ sed -i 's/zhuzhihaocool-bit/YOUR_GITHUB_NAME/g' esnai-course-helper.user.js
 ## 建议补充（非必需，但能让项目更完整）
 
 - [ ] **截图**：列表页横幅、播放页面板各一张，放 `docs/images/`，README 里引用
-- [ ] **Greasy Fork 同步**：发布到 https://greasyfork.org 可获得自动更新（在脚本头加 `@downloadURL` / `@updateURL`）
-- [ ] **Issue 模板**：`.github/ISSUE_TEMPLATE/bug_report.md`（要求填版本号、浏览器版本、Console 报错）
-- [ ] **GitHub Actions**：push 时自动跑 `node --check` 校验语法
-- [ ] **`.github/workflows/check.yml`** 示例：
+- [x] **Issue 模板**：`.github/ISSUE_TEMPLATE/bug_report.md`（要求填版本号、浏览器版本、Console 报错）
+- [x] **GitHub Actions**：push 时自动跑 `node --check` 校验语法
+- [x] **`.github/workflows/check.yml`** 已落地（含设计约束守卫）：
 
 ```yaml
 name: syntax-check
@@ -82,7 +81,6 @@ git push -u origin main
 
 - [ ] 仓库 About 里填一句话简介 + topics：`userscript` `tampermonkey` `esnai` `继续教育`
 - [ ] 打开 Issues
-- [ ] 如果需要自动更新，发布到 Greasy Fork 并在脚本头补 `@downloadURL`
 
 ## 不建议做的事
 
