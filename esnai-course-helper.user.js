@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         上海国家会计学院继续教育 · 课程助手
 // @namespace    https://github.com/zhuzhihaocool-bit/esnai-course-helper
-// @version      2.0.0
+// @version      2.0.1
 // @description  读取课程进度、学时达标后在新标签打开下一门，并关闭旧播放标签。不改播放位置、不改静音、不监听网络、不创建 iframe。
 // @author       zhuzhihaocool-bit
 // @match        https://ce.esnai.net/*
@@ -46,7 +46,7 @@
     var K_ARRIVE = 'sh-arrive';
     var K_RATE = 'sh-rate';
 
-    var VER = '2.0.0';
+    var VER = '2.0.1';
     var RATES = [1, 1.25, 1.5, 2, 3, 4];
 
     function ls(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } }
@@ -247,6 +247,8 @@
         // 记录本次会话内刷新次数，用于在横幅上自证"真的在刷"
         window.__shRefreshCount = window.__shRefreshCount || 0;
         window.__shRefreshAt = Date.now();
+        // 页面刚加载：把"上次刷新时间"重置为现在，否则会显示成 0 秒（旧时间戳）
+        try { sessionStorage.setItem('sh-refresh-at', String(Date.now())); } catch (e) {}
 
         window.__shRefreshTimer = setInterval(function () {
             // 不依赖 autoOn：用户要的是"列表页保持最新"，与是否自动跳课无关
@@ -268,7 +270,9 @@
             try { t0 = parseInt(sessionStorage.getItem('sh-refresh-at') || '0', 10) || 0; } catch (e) {}
             var base = t0 || window.__shRefreshAt || Date.now();
             var left = Math.max(0, sec - Math.round((Date.now() - base) / 1000));
-            el.textContent = '⟳ ' + left + ' 秒后刷新此页';
+            el.textContent = left > 0
+                ? '⟳ ' + left + ' 秒后刷新此页'
+                : '⟳ 正在刷新…';
         }, 1000);
     }
 

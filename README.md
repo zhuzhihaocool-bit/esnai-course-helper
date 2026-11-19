@@ -149,7 +149,9 @@ esnai-course-helper/
 ├── CHANGELOG.md                  # 版本记录
 ├── docs/
 │   ├── how-timing-works.md       # 学时计算机制（含实测抓包）
-│   └── troubleshooting.md        # 常见问题排查
+│   ├── troubleshooting.md        # 常见问题排查
+│   ├── greasyfork-publish.md     # Greasy Fork 发布文案
+│   └── publishing-checklist.md   # 发布前核对清单
 └── .gitignore
 ```
 
